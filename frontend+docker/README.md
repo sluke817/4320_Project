@@ -68,3 +68,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Deploying To AWS Commands:
+docker buildx build --platform=linux/amd64 -t front .
+
+docker run -p 3000:3000 front
+
+docker tag front 087468321421.dkr.ecr.us-east-2.amazonaws.com/kraken
+
+docker login -u AWS -p `aws --profile kraken ecr get-login-password --region us-east-2` 087468321421.dkr.ecr.us-east-2.amazonaws.com
+
+docker push 087468321421.dkr.ecr.us-east-2.amazonaws.com/kraken
