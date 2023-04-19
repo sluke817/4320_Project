@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: ${AWS::StackName}-lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+            - events.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AWSLambdaExecute
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Path: /
+    Metadata:
+      SamResourceId: LambdaRole
+  UsersDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableClass: STANDARD_INFREQUENT_ACCESS
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: name
+        AttributeType: S
+      KeySchema:
+      - AttributeName: name
+        KeyType: HASH
+      TableName:
+        Fn::Sub: users-info
+    Metadata:
+      SamResourceId: UsersDynamoDBTable
+  AddEditUserServiceLambdaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+    - AddEditUserService
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: AddEditUserService
+      Principal: apigateway.amazonaws.com
+    Metadata:
+      SamResourceId: AddEditUserServiceLambdaPermission
+  GetUserServiceLambdaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+    - GetUserService
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: GetUserService
+      Principal: apigateway.amazonaws.com
+    Metadata:
+      SamResourceId: GetUserServiceLambdaPermission
+  UsersEndpoint:
+    Type: AWS::Serverless::Api
+    Properties:
+      Auth:
+        ApiKeyRequired: false
+      StageName: prod
+    Metadata:
+      SamResourceId: UsersEndpoint
+  UsersEndpointUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+      - ApiId:
+          Ref: UsersEndpoint
+        Stage:
+          Ref: UsersEndpoint.Stage
+      Description: UsersEndpoint Api Usage Plan for api key
+      UsagePlanName:
+        Fn::Sub: UsersEndpointApiUsagePlan
+    Metadata:
+      SamResourceId: UsersEndpointUsagePlan
+  AddEditUserService:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: add-edit-user-lambda-endpoint
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.8
+      CodeUri: s3://kraken-lambda-packages/user-endpoint/c0f5dab087ce39683ad946e1c1b997c7
+      Description: Stand up endpoint for adding or edited the attributes of a user
+      MemorySize: 128
+      Timeout: 300
+      Role:
+        Fn::GetAtt:
+        - LambdaRole
+        - Arn
+      Environment:
+        Variables:
+          LOGGING_LEVEL: INFO
+          APP_ENV: prod
+          USER_TABLE:
+            Ref: UsersDynamoDBTable
+      Tags:
+        service:
+          Fn::Sub: add-edit-user-endpoint-prod
+        function_name:
+          Fn::Sub: add-edit-user-endpoint-prod
+      Events:
+        HttpGetPlayer:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: UsersEndpoint
+            Path: add-edit
+            Method: post
+    Metadata:
+      SamResourceId: AddEditUserService
+  GetUserService:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: get-user-lambda-endpoint
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.8
+      CodeUri: s3://kraken-lambda-packages/user-endpoint/c6a5c552beac947aaaa8f7dd2b54c95a
+      Description: Stand up endpoint for getting attributes of a user
+      MemorySize: 128
+      Timeout: 300
+      Role:
+        Fn::GetAtt:
+        - LambdaRole
+        - Arn
+      Environment:
+        Variables:
+          LOGGING_LEVEL: INFO
+          APP_ENV: prod
+          USER_TABLE:
+            Ref: UsersDynamoDBTable
+      Tags:
+        service:
+          Fn::Sub: get-user-lambda-endpoint
+        function_name:
+          Fn::Sub: get-user-lambda-endpoint
+      Events:
+        HttpGetPlayer:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: UsersEndpoint
+            Path: get-user-info/{username}
+            Method: get
+    Metadata:
+      SamResourceId: GetUserService
