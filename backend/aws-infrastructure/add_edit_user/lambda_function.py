@@ -39,6 +39,11 @@ def lambda_handler(event, context):
     try:
         output = {
                 'statusCode': 200,
+                'headers': { 
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "*",
+                    "Access-Control-Allow-Headers": "*"
+                },
                 'body': json.dumps(response,default=default)
                 }
                 
@@ -48,6 +53,11 @@ def lambda_handler(event, context):
 
         output = {
             'statusCode': 400,
+            'headers': { # added this from ChatGPT. I have no idea what it does
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "*",
+                    "Access-Control-Allow-Headers": "*"
+            },
             'body': json.dumps(error, default=default)
         }
                 

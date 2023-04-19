@@ -88,7 +88,7 @@ Resources:
         Fn::Sub: add-edit-user-lambda-endpoint
       Handler: lambda_function.lambda_handler
       Runtime: python3.8
-      CodeUri: s3://kraken-lambda-packages/user-endpoint/c0f5dab087ce39683ad946e1c1b997c7
+      CodeUri: s3://kraken-lambda-packages/user-endpoint/40905a7452c904579b50c7afb76d476e
       Description: Stand up endpoint for adding or edited the attributes of a user
       MemorySize: 128
       Timeout: 300
@@ -124,7 +124,7 @@ Resources:
         Fn::Sub: get-user-lambda-endpoint
       Handler: lambda_function.lambda_handler
       Runtime: python3.8
-      CodeUri: s3://kraken-lambda-packages/user-endpoint/c6a5c552beac947aaaa8f7dd2b54c95a
+      CodeUri: s3://kraken-lambda-packages/user-endpoint/1ebf484e88760d10a7a301a871aaed82
       Description: Stand up endpoint for getting attributes of a user
       MemorySize: 128
       Timeout: 300
