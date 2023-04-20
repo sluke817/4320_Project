@@ -21,7 +21,7 @@ export default function Login(props) {
         <div>
             <h1>Login</h1>
             <form onSubmit={(event) => attemptLogin(event)}>
-                <input type="email" placeholder="Email Address"></input>
+                <input type="text" placeholder="Username"></input>
                 <br></br>
                 <input type="password" placeholder="Password"></input>
                 <br></br>
