@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
-import getUserInfo from "./api/getUserInfo";
 import { useState } from "react";
+import Login from "./components/Login/Login";
 
 function App() {
   document.title = "Kraken";
@@ -12,6 +12,10 @@ function App() {
       <div className="App">
         <Login setUser={setUser} />
       </div>
+    )
+  } else {
+    return (
+      <h1>Logged in</h1>
     )
   }
 }
