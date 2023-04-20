@@ -1,19 +1,19 @@
 import React from "react";
 import "./App.css";
 import getUserInfo from "./api/getUserInfo";
+import { useState } from "react";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          <code>Hello Universe</code>! <br /> <br />
-          stay tuned @kraken
-        </p>
-        <button className="Test" onClick={() => console.log(getUserInfo('kraken'))}>CLICK ME AND CHECK YOUR CONSOLE!</button>
-      </header>
-    </div>
-  );
+  document.title = "Kraken";
+  const [user, setUser] = useState('');
+
+  if (user === '') {
+    return (
+      <div className="App">
+        <Login setUser={setUser} />
+      </div>
+    )
+  }
 }
 
 export default App;
