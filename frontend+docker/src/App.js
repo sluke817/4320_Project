@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { useState } from "react";
 import Login from "./components/Login/Login";
+import ViewAccountDetails from "./components/ViewAccountDetails";
 
 function App() {
   document.title = "Kraken";
@@ -13,11 +14,15 @@ function App() {
         <Login setUser={setUser} />
       </div>
     )
-  } else {
+  } 
+  else {
     return (
-      <h1>Logged in</h1>
+      <div className="AccountDetails">
+        <ViewAccountDetails user={user} />
+      </div>
     )
   }
+  
 }
 
 export default App;
