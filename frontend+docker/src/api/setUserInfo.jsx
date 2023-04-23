@@ -16,14 +16,8 @@ record = {
 Note: Request will create OR edit a user depending on given username
 */
 export default async function setUserInfo(record) {
-    const config = {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }
-
     try {
-        return await axios.post(`${url}/add-edit`, record, config);
+        return await axios.post(`${url}/add-edit`, JSON.stringify(record));
     } catch (err) {
         console.log(err);
     }
