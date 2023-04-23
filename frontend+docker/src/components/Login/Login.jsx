@@ -33,22 +33,24 @@ export default function Login(props) {
         const username = event.target[0].value;
         const password1 = event.target[1].value;
         const password2 = event.target[2].value;
+        const email = event.target[3].value;
 
         try {
             const exists = await doesUsernameExist(username);
-            console.log(exists);
             if (!exists) {
                 if (password1 !== password2) {
                     throw new Error("Passwords don't match.");
                 } else if (password1 === '') {
                     throw new Error("Password is empty.")
+                } else if (email === '') {
+                    throw new Error("Email is empty.")
                 }
                 const record = {
                     'username': username,
                     'password': password1,
                     'fname': '',
                     'lname': '',
-                    'email': '',
+                    'email': email,
                     'cell_phone': '',
                     'hours_available': '',
                     'postal_address': ''
@@ -94,6 +96,17 @@ export default function Login(props) {
         )
     }
 
+    function emailInput() {
+        if (header === 'Create Account') {
+            return (
+                <div>
+                    <input type="email" placeholder="Email"></input>
+                    <br></br>
+                </div>
+            )
+        }
+    }
+
     function extraPasswordInput() {
         if (header === 'Create Account') {
             return (
@@ -122,6 +135,7 @@ export default function Login(props) {
                 <input id="password" type="password" placeholder="Password"></input>
                 <br></br>
                 {extraPasswordInput()}
+                {emailInput()}
                 <button onClick={() => setError(false)}>Submit</button>
                 {error && displayError()}
             </form>
