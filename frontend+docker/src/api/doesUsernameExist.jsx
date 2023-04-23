@@ -2,9 +2,13 @@ import getUserInfo from "./getUserInfo";
 
 export default async function doesUsernameExist(username) {
     try {
-        await getUserInfo(username);
-        return true;
+        const user = await getUserInfo(username);
+        if (user.username !== '') {
+            return true;
+        } else {
+            return false;
+        }
     } catch (err) {
-        return false;
+        console.log(err);
     }
 }
