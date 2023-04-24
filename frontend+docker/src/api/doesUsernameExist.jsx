@@ -8,7 +8,5 @@ export default async function doesUsernameExist(username) {
         } else {
             return false;
         }
-    } catch (err) {
-        throw new Error("Username already exists.");
-    }
+    } catch (err) { }
 }
