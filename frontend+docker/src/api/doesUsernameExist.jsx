@@ -9,6 +9,6 @@ export default async function doesUsernameExist(username) {
             return false;
         }
     } catch (err) {
-        console.log(err);
+        throw new Error("Username already exists.");
     }
 }
