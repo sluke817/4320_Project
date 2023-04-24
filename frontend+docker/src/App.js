@@ -14,15 +14,15 @@ function App() {
         <Login setUser={setUser} />
       </div>
     )
-  } 
+  }
   else {
     return (
       <div className="AccountDetails">
-        <ViewAccountDetails user={user} />
+        <ViewAccountDetails user={user} setUser={setUser} />
       </div>
     )
   }
-  
+
 }
 
 export default App;

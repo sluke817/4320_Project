@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import getUserInfo from "../api/getUserInfo";
 import setUserInfo from "../api/setUserInfo";
+import Logout from "./Logout";
 
 export default function ViewAccountDetails(props) {
-    const { user } = props;
+    const { user, setUser } = props;
     const [details, setDetails] = useState("");
     useEffect(() => {
         getUserInfo(user).then((response) => setDetails(response));
@@ -55,7 +56,10 @@ export default function ViewAccountDetails(props) {
                 </fieldset>
                 <br></br>
                 <button>Save Changes</button>
+                <br></br>
+                <br></br>
             </form>
+            <Logout setUser={setUser} />
         </div>
     )
 }
