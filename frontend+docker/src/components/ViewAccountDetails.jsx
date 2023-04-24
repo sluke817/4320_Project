@@ -20,8 +20,6 @@ export default function ViewAccountDetails(props) {
             const hours = event.target[5].value;
             const address = event.target[6].value;
 
-            console.log(event.target)
-
             const record = {
                 'username': user,
                 'password': details.password,
